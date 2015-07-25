@@ -3,12 +3,12 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util')
 var request = require('request');
 var http = require('http');
+var count = 0;
 
 /*
  * Scraper Constructor
 **/
 function Scraper (url) {
-    console.log(url);
     this.url = url.url;
     this.searchedCompanyWebsite = url.companyWebsite;
     this.searchedCompany = url.company
@@ -24,8 +24,12 @@ Scraper.prototype.init = function () {
     var model;
     var self = this;
     self.on('loaded', function (html) {
-        model = self.parsePage(html);
-        self.emit('complete', model);
+        self.parsePage(html, function(doc){
+        	model = doc;
+       		if (model.linkedIn != ""){
+       			self.emit('complete', model);
+       		} else self.emit('error', "Incomplete Data")
+        }) 
     });
     self.loadWebPage();
 };
@@ -50,9 +54,8 @@ Scraper.prototype.loadWebPage = function () {
   });      
 };
 
-Scraper.prototype.parsePage = function(html){
+Scraper.prototype.parsePage = function(html, callback){
 	var self = this;
-	console.log("here");
 	var peeps = {
 		name:"",
 		firstName:"",
@@ -68,7 +71,8 @@ Scraper.prototype.parsePage = function(html){
 	var $ = cheerio.load(html);
 	var nameSearch = $("#b_results");
 	if (nameSearch[0] != null){
-    	for (var i = 0; i < nameSearch[0].children.length ; i++) {
+    	for (var i = 0; i < nameSearch[0].children.length; i++) {
+    		console.log(count = count + 1);
     		if (nameSearch[0].children[i].children[0].children[0].children != null) {
 	    		if (nameSearch[0].children[i].children[0].children[0].children[0].children != null) {
 	    			if (nameSearch[0].children[i].children[0].children[0].children[0].children[0] != null){
@@ -82,12 +86,12 @@ Scraper.prototype.parsePage = function(html){
 		    			var newName = name.split(' ');
 		    			peeps.firstName = newName[0];
 						peeps.lastName = newName[1];
-		    			return peeps;
-		    		}
-		    	}
-		    }
+		    			callback(peeps);
+		    		} callback(peeps); 
+		    	} callback(peeps);
+		    } callback(peeps);
 		}	
-	}
+	} callback(peeps);
 }
 
 module.exports = Scraper;

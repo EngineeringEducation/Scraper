@@ -1,12 +1,9 @@
 var cheerio = require('cheerio');
 var request = require('request');
 var mongo = require('./insertDocument');
-var verify = require('./verifyEmails');
-var companies = require('./companies.js');
 var urllib = require('url');
 var EventEmitter = require('events').EventEmitter;
 var Scraper = require('./Scraper.js')
-
 
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
@@ -35,7 +32,7 @@ function createURLArray(array){
 	var keywordsToSearch = "San+Francisco";
 	for (var i = 0; i < companiesToSearch.length; i++) {
 		var count = 1;
-		for (var j = 0; j < 15; j++) {
+		for (var j = 0; j < 30; j++) {
 			var resultNumber = count;
 			var siteurl = 	"http://www.bing.com/search?q=site%3a"
 							+siteToSearch+"%22"
@@ -52,6 +49,7 @@ function createURLArray(array){
 		};
 	}
 	Pages = urlArray;
+	console.log(Pages);
 	start();
 }
 
