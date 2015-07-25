@@ -3,14 +3,17 @@ var request = require('request');
 var mongo = require('./insertDocument');
 var urllib = require('url');
 var EventEmitter = require('events').EventEmitter;
-var Scraper = require('./Scraper.js')
+var Scraper = require('./Scraper.js');
 
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://localhost:27017/scraper';
+var url = 'mongodb://caitlin:caitlinadmin@ds063892.mongolab.com:63892/tc-scraper-data';
 var insert = require('./insertDocument')
 
+// var connection = new Mongo('063892.mongolab.com:63892')
+// var db = connection.getDB('tc-scraper-data')
+// db.auth('caitlin', 'caitlinadmin');
 var db;
 MongoClient.connect(url, function(err, mongo) {
 	if (err != null) {
@@ -32,7 +35,7 @@ function createURLArray(array){
 	var keywordsToSearch = "San+Francisco";
 	for (var i = 0; i < companiesToSearch.length; i++) {
 		var count = 1;
-		for (var j = 0; j < 30; j++) {
+		for (var j = 0; j < 3; j++) {
 			var resultNumber = count;
 			var siteurl = 	"http://www.bing.com/search?q=site%3a"
 							+siteToSearch+"%22"
