@@ -1,3 +1,4 @@
+
 module.exports = function(){
 	var columns = ["companyName", "companyWebsite"];
 	require("csv-to-array")({
