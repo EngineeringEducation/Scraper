@@ -1,0 +1,17 @@
+body {
+	background-image: url("typewriter.jpg");
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: 100% auto;
+	background-color: #dcdcde;
+}
+
+#iframe{
+	width: 100%;
+	height: 600px;
+}
+
+#sheets{
+	background-image: none;
+	background-color: black;
+}

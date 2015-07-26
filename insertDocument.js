@@ -1,10 +1,11 @@
 
 
 module.exports = function(db){
+	console.log(db);
 	this.db = db;
 	this.insertDocument = function(document) {
 		if (document){
-		   	this.db.collection('contacts').insertOne({
+		   	this.db.create({
 		      _id : document.linkedIn,
 		      "name" : document.name,
 		      "first" : document.firstName,

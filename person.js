@@ -4,37 +4,48 @@ var mongo = require('./insertDocument');
 var urllib = require('url');
 var EventEmitter = require('events').EventEmitter;
 var Scraper = require('./person_scraper.js')
-
-var MongoClient = require('mongodb').MongoClient;
+var mongoose = require('mongoose')
+var Schema = mongoose.Schema;
 var assert = require('assert');
-var ObjectId = require('mongodb').ObjectID;
 var url = 'mongodb://caitlin:caitlinadmin@ds063892.mongolab.com:63892/tc-scraper-data';
 var insert = require('./insertDocument')
 
 var db;
-MongoClient.connect(url, function(err, mongo) {
-	if (err != null) {
-		console.log(err)
-	}
-	db = mongo;
-	var collection = db.collection('contacts');
-	this.collection = collection;
-	createURLArray(collection);
-});	
+run();
+
+function run() {
+	db = mongoose.connection;
+	mongoose.connect(url);
+	var schema = new Schema({ 
+		name: String,
+		first: String, 
+		last: String, 
+		searchedCompany: String,
+		searchedCompanyWebsite: String,
+		currentJob: String,
+		currentTitle: String,
+		validEmails: Array,
+		validatedBy: String,
+		permutations: Array
+		}); 
+	schema.set('collection','contacts');
+	var Contact = mongoose.model('contacts', schema);
+	createURLArray(Contact);
+
+}
 
 var Pages = [];
 var contacts;
 
 //generate URL array and return
-function createURLArray(collection){
-	contacts = collection;
-	collection.find({}).toArray(function(err, docs){
+function createURLArray(Contact){
+	Contact.find(function(err,contacts){
 		var urlArray = [];
-		for (var i = 0; i < docs.length; i++) {
-			var linkedIn = docs[i]._id;
-			var first = docs[i].first;
-			var last = docs[i].last;
-			var company = docs[i].searchedCompany;
+		for (var i = 0; i < contacts.length; i++) {
+			var linkedIn = contacts._id;
+			var first = contacts.first;
+			var last = contacts.last;
+			var company = contacts.searchedCompany;
 			var siteurl = 	"http://www.bing.com/search?q="
 							+first+"%20"
 							+last+"%20"
